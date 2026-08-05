@@ -1,0 +1,17 @@
+<div class="layout layout--row gap--base">
+  <div class="flex flex--col flex--center-y gap--xsmall bg--gray-7 p--5 cmu-stat">
+    <span class="label label--small">{{ handle }}</span>
+    <span class="value value--base value--tnums">${{ spend_dollars }}</span>
+    <span class="label label--small value--tnums">{{ percent_spent | round: 0 }}% of ${{ budget_dollars }}</span>
+  </div>
+
+  <div class="flex flex--col flex--top stretch-x cmu-min0">
+    {% render 'model_bars', trmnl: trmnl, usage: usage, model_max_cents: model_max_cents, limit: 4, show_share: false %}
+  </div>
+</div>
+
+<div class="title_bar">
+  <img class="image image-stroke--medium" src="data:image/svg+xml;base64,{{ logo_svg | base64_encode }}" />
+  <span class="title">{{ usage.name }} &middot; Cursor usage</span>
+  <span class="instance">{{ usage.totalFastRequests | number_with_delimiter }} fast req</span>
+</div>

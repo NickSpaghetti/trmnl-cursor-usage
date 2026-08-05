@@ -1,0 +1,23 @@
+version: 2
+
+# No npm entry on purpose. The plugin has zero JS dependencies — the tests run
+# on node's built-in test runner — so there is no manifest or lockfile to bump.
+updates:
+  # Keeps the pinned action versions in .github/workflows current.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: bumped
+    labels: [dependencies, ci]
+
+  # Watches trmnl/trmnlp in docker-compose.yml. Note the tag is unpinned there
+  # with pull_policy: always, so this only helps if the tag is ever pinned.
+  - package-ecosystem: docker-compose
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: bumped
+    labels: [dependencies, docker]

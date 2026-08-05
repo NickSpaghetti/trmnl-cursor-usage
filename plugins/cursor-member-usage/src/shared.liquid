@@ -1,0 +1,128 @@
+{%- comment -%} Cursor cube logo as inline vector SVG — self-contained (no URL to expire,
+no base64 blob to maintain). Grayscale faces dither on 1-bit TRMNL, render as solid grays
+on the larger panel. {%- endcomment -%}
+{%- capture logo_svg -%}
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="16" fill="#17150f"/>
+  <g stroke="#17150f" stroke-width="2.5" stroke-linejoin="round">
+    <path d="M50 17 L79 34 L50 51 L21 34 Z" fill="#8d8d88"/>
+    <path d="M79 34 L79 67 L50 84 L50 51 Z" fill="#6d6d69"/>
+    <path d="M21 34 L50 51 L50 84 L21 67 Z" fill="#52524e"/>
+  </g>
+  <g stroke="#17150f" stroke-width="1.2" stroke-linejoin="round">
+    <path d="M25 35 L76 43 L53 82 Z" fill="#f6f6f3"/>
+    <path d="M53 82 L76 43 L51 53 Z" fill="#c9c9c4"/>
+  </g>
+</svg>
+{%- endcapture -%}
+
+{% assign usage = IDX_0 %}
+{% assign budget_dollars = trmnl.plugin_settings.custom_fields_values.cursor_member_budget_dollars | default: 25 | plus: 0 %}
+{% assign spend_dollars = usage.totalSpend %}
+{% assign budget_cents = budget_dollars | times: 100 %}
+{% if budget_cents > 0 %}
+  {% assign percent_spent = usage.totalSpendCents | times: 100 | divided_by: budget_cents %}
+{% else %}
+  {% assign percent_spent = 0 %}
+{% endif %}
+{% comment %} models are pre-sorted desc by transform.js, so [0] is the max {% endcomment %}
+{% assign model_max_cents = usage.models[0].spendCents | default: 1 %}
+{% if model_max_cents == 0 %}{% assign model_max_cents = 1 %}{% endif %}
+{% assign handle = usage.email | split: '@' | first %}
+
+{% comment %}
+  STRUCTURE: the framework hard-sizes `.layout` to the whole screen
+  (`.layout { width: var(--screen-w); height: var(--screen-h) }`) and its
+  `.view--* .layout` rules match every descendant, not just the direct child.
+  So each view uses exactly ONE `.layout` as its root and groups everything
+  inside with `.flex`. A second, nested `.layout` inflates to 800x480 and
+  shoves the rest of the view off-screen.
+{% endcomment %}
+
+{% template member_header %}
+{% assign name_parts = usage.name | split: ' ' %}
+{% capture initials %}{% for p in name_parts limit: 2 %}{{ p | slice: 0, 1 }}{% endfor %}{% endcapture %}
+<div class="flex flex--row flex--center-y gap--base w--full cmu-divider pb--2">
+  <div class="cmu-avatar">{{ initials | upcase }}</div>
+  <div class="flex flex--col gap--xsmall stretch-x cmu-left cmu-min0">
+    <span class="title title--base cmu-wrap">{{ usage.name }}</span>
+    <span class="label label--small cmu-wrap">{{ usage.email }} &middot; {{ usage.totalFastRequests | number_with_delimiter }} fast req</span>
+  </div>
+  <div class="flex flex--col gap--xsmall cmu-right">
+    <span class="value value--base value--tnums">${{ spend_dollars }}</span>
+    <span class="label label--small value--tnums">{{ percent_spent | round: 0 }}% of ${{ budget_dollars }}</span>
+  </div>
+</div>
+{% endtemplate %}
+
+{% template personal_meter %}
+<div class="progress-bar progress-bar--large w--full">
+  <div class="content">
+    <span class="label">{{ title | default: 'Personal AI Spend' }} (${{ spend_dollars }} of ${{ budget_dollars }})</span>
+    <span class="value value--xxsmall value--tnums">{{ percent_spent | round: 1 }}%</span>
+  </div>
+  <div class="track">
+    {% assign fill_class = '' %}
+    {% if percent_spent > 75 %}{% assign fill_class = 'bg--gray-3' %}{% endif %}
+    {% if percent_spent > 90 %}{% assign fill_class = 'bg--gray-1' %}{% endif %}
+    <div class="fill {{ fill_class }}" style="width: {{ percent_spent | at_most: 100 }}%"></div>
+  </div>
+</div>
+{% endtemplate %}
+
+{% template model_bars %}
+<div class="flex flex--col flex--top gap--small w--full stretch-y cmu-left">
+  <div class="flex flex--row flex--center-y w--full cmu-divider pb--1">
+    <span class="title title--small stretch-x">Spend by Model</span>
+    <span class="title title--small text--right">Spend{% if show_share %} &middot; Req &middot; Share{% endif %}</span>
+  </div>
+  {% assign row_limit = limit | default: 6 %}
+  {% for model in usage.models limit: row_limit %}
+  {% assign width = model.spendCents | times: 100 | divided_by: model_max_cents %}
+  <div class="flex flex--col gap--xsmall w--full cmu-left">
+    <div class="flex flex--row flex--center-y w--full">
+      <span class="label label--small stretch-x cmu-min0 cmu-wrap">{{ model.name }}</span>
+      {% if show_share %}<span class="label label--small value--tnums pr--1">{{ model.requests | number_with_delimiter }} req &middot; {{ model.sharePct | round: 0 }}%</span>{% endif %}
+      <span class="value value--xxsmall value--tnums">${{ model.spend }}</span>
+    </div>
+    <div class="cmu-track w--full">
+      <div class="cmu-fill" style="width: {{ width | at_least: 4 }}%"></div>
+    </div>
+  </div>
+  {% else %}
+  <div class="flex flex--col flex--center-y w--full stretch-y">
+    <span class="title title--base">No usage this billing period.</span>
+  </div>
+  {% endfor %}
+</div>
+{% endtemplate %}
+
+<style>
+  /* Scoped helpers the framework doesn't ship. Render on 1-bit + 4-bit alike.
+     .flex--col centers its children on the cross axis, so left/right-aligned
+     stacks opt out explicitly. */
+  .cmu-left { align-items: flex-start; }
+  .cmu-right { align-items: flex-end; text-align: right; }
+  .cmu-min0 { min-width: 0; }
+  /* Emails and model ids have no spaces, so they will not wrap on their own.
+     Without this they overflow the column instead of breaking onto a new line.
+     Nothing here is clamped — the whole value is always shown. */
+  .cmu-wrap { overflow-wrap: anywhere; }
+  .cmu-stat { flex: 0 0 38%; }
+  .cmu-divider { border-bottom: 2px solid currentColor; }
+  .cmu-avatar {
+    flex: 0 0 auto;
+    width: 48px; height: 48px;
+    border: 2px solid currentColor;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 22px; line-height: 1;
+  }
+  /* The framework's .progress-bar owns its own track. These model rows are
+     standalone bars, so they carry their own. */
+  .cmu-track { height: 10px; border: 1.5px solid currentColor; }
+  .cmu-fill { height: 100%; background: currentColor; }
+  /* screen--lg is the larger TRMNL X panel. */
+  .screen--lg .cmu-avatar { width: 96px; height: 96px; font-size: 44px; }
+  .screen--lg .cmu-track { height: 18px; }
+</style>

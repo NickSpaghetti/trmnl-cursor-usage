@@ -1,0 +1,130 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A new push to the same branch supersedes the previous run.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Every plugin under plugins/ is checked independently, so adding one needs no
+  # CI change. Dot-directories are skipped, which excludes the throwaway
+  # .screenshots-stage dir if a local run left it behind.
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      plugins: ${{ steps.list.outputs.plugins }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - id: list
+        run: |
+          json=$(find plugins -mindepth 1 -maxdepth 1 -type d -not -name '.*' -printf '%f\n' \
+            | sort \
+            | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "plugins=$json" >> "$GITHUB_OUTPUT"
+          echo "discovered: $json"
+
+  plugin:
+    needs: discover
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        plugin: ${{ fromJSON(needs.discover.outputs.plugins) }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - name: Lint against TRMNL best practices
+        run: make lint PLUGIN=${{ matrix.plugin }}
+
+      # Runs on the container's node — the same interpreter that executes
+      # transform.js in the preview server and, closely, in production.
+      - name: Transform unit tests
+        run: make test PLUGIN=${{ matrix.plugin }}
+
+      # Catches Liquid that lints clean but blows up at render time. With no
+      # API key the poller warns and hands the renderer {}, so this exercises
+      # the empty state end to end.
+      - name: Render empty state
+        run: make build PLUGIN=${{ matrix.plugin }}
+
+      # Renders with demo data. Deliberately NOT compared byte-for-byte against
+      # the committed images: the trmnlp tag is unpinned and the page fetches
+      # Inter over the network, so identical markup can produce different bytes.
+      # The artifact is here to be looked at on a PR.
+      - name: Render demo data
+        if: hashFiles(format('plugins/{0}/fixtures/demo-usage-events.json', matrix.plugin)) != ''
+        run: make screenshots PLUGIN=${{ matrix.plugin }}
+
+      - name: Upload renders
+        if: always() && hashFiles(format('plugins/{0}/docs/*.png', matrix.plugin)) != ''
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: renders-${{ matrix.plugin }}
+          path: plugins/${{ matrix.plugin }}/docs/*.png
+          retention-days: 14
+
+  workflows:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: reviewdog/action-actionlint@v1.73.0
+        with:
+          reporter: github-pr-check
+          fail_level: error
+
+  secrets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      # gitleaks posts inline review comments when it finds a leak. Scoped to
+      # this job so the rest of the workflow stays read-only.
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          # Full history: a key committed and later removed is still a leak.
+          fetch-depth: 0
+
+      # The credential this repo is built around can remove people from a Cursor
+      # team, so a leak is not just a spend-data problem.
+      - uses: gitleaks/gitleaks-action@v3.0.0
+        env:
+          # Required — the action calls the GitHub API to enumerate the commits
+          # in a pull request. Without it the run fails on any PR event.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Only needed on organization accounts; unset here and that is fine.
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+          # Inline review comments on branches in this repo, off for forks.
+          # GitHub forces GITHUB_TOKEN read-only on fork PRs regardless of the
+          # permissions block above, so leaving comments on would fail the step
+          # for an infrastructure reason rather than an actual leak. The failing
+          # check and job summary still report the leak there.
+          GITLEAKS_ENABLE_COMMENTS: ${{ github.event.pull_request.head.repo.fork != true }}
+
+      # gitleaks matches on content. This catches the other failure mode: an
+      # env file committed under a name .gitignore does not cover. `*.env`
+      # matches .env but NOT .env.bak, .env.local, or env.production.
+      - name: Refuse tracked env files
+        run: |
+          hits=$(git ls-files \
+            | grep -E '(^|/)\.?env([.-].*)?$' \
+            | grep -vE '(^|/)\.env\.example$' || true)
+          if [ -n "$hits" ]; then
+            echo "::error::env file(s) are tracked by git:"
+            echo "$hits"
+            exit 1
+          fi
+          echo "no tracked env files"
