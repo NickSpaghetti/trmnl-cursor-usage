@@ -93,6 +93,11 @@ to a GitHub organization, `gitleaks-action` requires a free license key in the
 `GITLEAKS_LICENSE` secret, or swap it for `trufflesecurity/trufflehog`, which
 has no licensing gate.
 
+On a leak, gitleaks leaves inline review comments on PRs from branches in this
+repo. It does not on PRs from forks: GitHub forces `GITHUB_TOKEN` read-only
+there, so commenting would fail the step for an infrastructure reason rather
+than a real finding. The failing check and the job summary still report it.
+
 Dependabot (`.github/dependabot.yml`) bumps the action versions weekly. There is
 no npm entry: the plugin has zero JS dependencies, so there is no lockfile.
 
