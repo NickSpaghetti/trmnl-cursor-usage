@@ -39,13 +39,13 @@ custom_fields:
   field_type: password
   name: Cursor Admin API Key
   description: Found at cursor.com/dashboard → Settings → Cursor Admin API Keys
-  placeholder: cursor_...
+  placeholder: key_...
   optional: false
 - keyname: cursor_member_email
   field_type: string
   name: Member Email
   description: The team member whose usage this dashboard displays
-  placeholder: name@company.com
+  placeholder: name@domain.com
   optional: false
 - keyname: cursor_member_budget_dollars
   field_type: number
