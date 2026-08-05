@@ -82,24 +82,25 @@ in.
 | `workflows` | actionlint over the workflow files themselves |
 | `secrets` | gitleaks over full history, plus a guard against tracked env files |
 
-The renders are uploaded as artifacts to look at on a PR. They are **not**
-compared byte-for-byte against the committed screenshots — the `trmnl/trmnlp`
-tag is unpinned and the page fetches its font over the network, so identical
-markup can produce different bytes. Pin the image by digest and self-host the
-font if you ever want a real drift gate.
+Renders are uploaded as artifacts to look at on a PR. They are not diffed
+against the committed screenshots. The `trmnl/trmnlp` tag is unpinned and the
+page fetches its font over the network, so identical markup can produce
+different bytes. Pin the image by digest and self-host the font if you want a
+real drift gate.
 
-`secrets` needs no configuration on a personal account. If this repo ever moves
-to a GitHub organization, `gitleaks-action` requires a free license key in the
-`GITLEAKS_LICENSE` secret, or swap it for `trufflesecurity/trufflehog`, which
-has no licensing gate.
+Secret scanning:
 
-On a leak, gitleaks leaves inline review comments on PRs from branches in this
-repo. It does not on PRs from forks: GitHub forces `GITHUB_TOKEN` read-only
-there, so commenting would fail the step for an infrastructure reason rather
-than a real finding. The failing check and the job summary still report it.
+- No configuration needed on a personal account.
+- On a GitHub organization, `gitleaks-action` needs a free license key in
+  `GITLEAKS_LICENSE`. `trufflesecurity/trufflehog` has no licensing gate if you
+  would rather swap.
+- Inline PR comments are on for branches in this repo and off for forks. GitHub
+  forces `GITHUB_TOKEN` read-only on fork PRs, so commenting there fails the
+  step for an infrastructure reason. The check still fails and the job summary
+  still reports the leak.
 
-Dependabot (`.github/dependabot.yml`) bumps the action versions weekly. There is
-no npm entry: the plugin has zero JS dependencies, so there is no lockfile.
+Dependabot bumps action versions weekly. No npm entry, because the plugin has
+zero JS dependencies and no lockfile.
 
 ## Adding a plugin
 

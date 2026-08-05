@@ -49,7 +49,7 @@ on the larger panel. {%- endcomment -%}
     <span class="label label--small cmu-wrap">{{ usage.email }} &middot; {{ usage.totalFastRequests | number_with_delimiter }} fast req</span>
   </div>
   <div class="flex flex--col gap--xsmall cmu-right">
-    <span class="value value--base value--tnums">${{ spend_dollars }}</span>
+    <span class="value value--base">${{ spend_dollars }}</span>
     <span class="label label--small value--tnums">{{ percent_spent | round: 0 }}% of ${{ budget_dollars }}</span>
   </div>
 </div>
@@ -70,15 +70,26 @@ on the larger panel. {%- endcomment -%}
 </div>
 {% endtemplate %}
 
+{% comment %}
+  TRMNL X (screen--lg) is 1040x780 logical against the OG's 800x480, so the same
+  row count leaves a third of the panel blank. Two `lg:` adjustments close that:
+  the list distributes its rows to fill the height, and rows past `limit` are
+  revealed. Both are framework utilities scoped to .screen--lg, so the OG layout
+  is untouched.
+{% endcomment %}
 {% template model_bars %}
-<div class="flex flex--col flex--top gap--small w--full stretch-y cmu-left">
+<div class="flex flex--col flex--top gap--small w--full stretch-y cmu-left lg:gap--distribute">
   <div class="flex flex--row flex--center-y w--full cmu-divider pb--1">
     <span class="title title--small stretch-x">Spend by Model</span>
     <span class="title title--small text--right">Spend{% if show_share %} &middot; Req &middot; Share{% endif %}</span>
   </div>
   {% assign row_limit = limit | default: 6 %}
-  {% for model in usage.models limit: row_limit %}
+  {% assign lg_row_limit = lg_limit | default: row_limit %}
+  {% for model in usage.models limit: lg_row_limit %}
   {% assign width = model.spendCents | times: 100 | divided_by: model_max_cents %}
+  {% comment %} rows past the small-screen limit ride in a wrapper so the row
+  itself keeps display:flex — lg:visible resolves to display:block {% endcomment %}
+  {% if forloop.index > row_limit %}<div class="hidden lg:visible w--full">{% endif %}
   <div class="flex flex--col gap--xsmall w--full cmu-left">
     <div class="flex flex--row flex--center-y w--full">
       <span class="label label--small stretch-x cmu-min0 cmu-wrap">{{ model.name }}</span>
@@ -89,6 +100,7 @@ on the larger panel. {%- endcomment -%}
       <div class="cmu-fill" style="width: {{ width | at_least: 4 }}%"></div>
     </div>
   </div>
+  {% if forloop.index > row_limit %}</div>{% endif %}
   {% else %}
   <div class="flex flex--col flex--center-y w--full stretch-y">
     <span class="title title--base">No usage this billing period.</span>

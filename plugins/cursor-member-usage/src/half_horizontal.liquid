@@ -1,12 +1,12 @@
 <div class="layout layout--row gap--base">
   <div class="flex flex--col flex--center-y gap--xsmall bg--gray-7 p--5 cmu-stat">
     <span class="label label--small">{{ handle }}</span>
-    <span class="value value--base value--tnums">${{ spend_dollars }}</span>
+    <span class="value value--base">${{ spend_dollars }}</span>
     <span class="label label--small value--tnums">{{ percent_spent | round: 0 }}% of ${{ budget_dollars }}</span>
   </div>
 
   <div class="flex flex--col flex--top stretch-x cmu-min0">
-    {% render 'model_bars', trmnl: trmnl, usage: usage, model_max_cents: model_max_cents, limit: 4, show_share: false %}
+    {% render 'model_bars', trmnl: trmnl, usage: usage, model_max_cents: model_max_cents, limit: 4, lg_limit: 6, show_share: false %}
   </div>
 </div>
 
