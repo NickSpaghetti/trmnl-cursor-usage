@@ -18,40 +18,41 @@ Install one instance per person you want a dashboard for.
 All four TRMNL layouts render from the same markup. Sample data below, not a
 real account.
 
-### Full — 800x480
+Smaller layouts drop detail. They are not the full layout shrunk down.
+
+| Layout | Size | Shows |
+|--------|------|-------|
+| Full | 800x480 | 6 models, request count and share |
+| Half horizontal | 800x240 | Stat block, 4 models |
+| Half vertical | 400x480 | Stacked stat, 4 models |
+| Quadrant | 400x240 | Stat, top model only |
+
+Regenerate all four with `make screenshots` after changing a template.
+
+### Full
 
 ![Full layout](docs/full.png)
 
-### Half horizontal — 800x240
+### Half horizontal
 
 ![Half horizontal layout](docs/half_horizontal.png)
 
-### Half vertical — 400x480
+### Half vertical
 
 ![Half vertical layout](docs/half_vertical.png)
 
-### Quadrant — 400x240
+### Quadrant
 
 ![Quadrant layout](docs/quadrant.png)
 
-Each smaller layout drops detail rather than shrinking the full one. Half
-horizontal and half vertical show four models without the request/share
-columns, quadrant shows just the top model. Regenerate all four with `make
-screenshots` after changing a template.
-
 ## Works on both TRMNL devices
 
-You do not ship separate templates for TRMNL X. The same markup renders on:
+One set of templates covers both. No separate X markup.
 
-- **Original TRMNL**, 800x480, 1-bit. The framework dithers fills.
-- **TRMNL X**, 1872x1404, 16-level grayscale. The framework renders solid
-  grayscale fills per the
-  [X guide](https://trmnl.com/framework/docs/3.1/trmnl_x_guide), and the larger
-  screen reveals the `lg:`-gated rows. More models, request counts, the share
-  column. Portrait is handled by the device.
-
-The `lg:` responsive utilities scale the layout up on the bigger X panel
-instead of just zooming it.
+| Device | Panel | Logical viewport | Palette | Size class |
+|--------|-------|------------------|---------|------------|
+| TRMNL OG | 800x480 | 800x480 | 1-bit, dithered fills | `screen--md` |
+| TRMNL X | 1872x1404 | 1040x780 (scale 1.8) | 16-grays, solid fills | `screen--lg` |
 
 ## Data source
 
@@ -88,14 +89,16 @@ believable.
 `foreignEvents` in the transform output counts events that had to be discarded.
 It should always be 0. Anything else means the request-level filter didn't hold.
 
-The re-filter is skipped when no member is configured, or when the response
-carries no `userEmail` at all, so a schema change degrades to "show everything"
-rather than "show nothing".
+The re-filter is skipped in two cases, so a schema change degrades to "show
+everything" rather than "show nothing":
+
+- No member is configured
+- The response carries no `userEmail` at all
 
 None of this limits the API key. Filtering is a query parameter, not a
-permission boundary — the key itself can read every member's usage and, on
-Enterprise plans, remove people from the team. Cursor issues no read-only or
-per-user scoped key.
+permission boundary. The key reads every member's usage and, on Enterprise
+plans, can remove people from the team. Cursor issues no read-only or per-user
+scoped key.
 
 ### Field mapping
 
@@ -163,16 +166,20 @@ The framework hard-sizes `.layout` to the whole screen:
 
 Those `.view--* .layout` rules match every descendant, not just the direct
 child. Nest a second `.layout` and it inflates to 800x480 and pushes the rest of
-the view off-screen. The symptom is a blank panel with only the title bar
+the view off screen. The symptom is a blank panel with only the title bar
 visible.
 
-So each view has exactly one `.layout` as its root and groups everything inside
-with `.flex` plus `flex--row` / `flex--col` / `flex--center-y` / `stretch-x`.
+Each view has exactly one `.layout` as its root. Everything inside groups with
+`.flex` plus `flex--row` / `flex--col` / `flex--center-y` / `stretch-x`.
 
-Framework 3.2.0 also has no `layout--middle`, `layout--gap`, or numeric
-`gap--1` / `gap--2` / `gap--4`. Gaps are a named scale: `gap--none`,
-`gap--xsmall`, `gap--small`, `gap--base`, `gap--medium`, `gap--large`,
-`gap--xlarge`. The larger TRMNL X panel is `screen--lg`, not `screen--x`.
+Other classes that do not exist in framework 3.2.0:
+
+| Does not exist | Use instead |
+|----------------|-------------|
+| `layout--middle` | `flex--center-y` |
+| `layout--gap` | `gap--base` |
+| `gap--1` / `gap--2` / `gap--4` | `gap--xsmall` / `gap--small` / `gap--base` / `gap--medium` / `gap--large` / `gap--xlarge` |
+| `screen--x` | `screen--lg` |
 
 ### Model names are shown verbatim
 
@@ -188,14 +195,13 @@ An earlier version mapped ids to friendly labels with a regex, and it collided:
 | `gemini-2.5-pro` | Gemini 2.5 |
 | `gemini-2.5-flash` | Gemini 2.5 |
 
-Three separate rows reading "Opus 4" with three different dollar amounts, and
-no way to tell pro from flash despite the price difference. It also only
-shortened some families — the `gpt` branch uppercased the whole id instead, and
-anything unrecognized fell through in lowercase.
+Three separate rows reading "Opus 4" with three different dollar amounts, and no
+way to tell pro from flash despite the price difference. It only shortened some
+families too. The `gpt` branch uppercased the whole id, and anything
+unrecognized fell through in lowercase.
 
-A lookup table would be safe if you want friendly names back, but it has to be
-exhaustive and keyed on the full id. Regex prefix matching on model names is
-what caused this.
+A lookup table keyed on the full id would be safe if you want friendly names
+back. Regex prefix matching on model names is what caused this.
 
 ### Nothing is truncated
 

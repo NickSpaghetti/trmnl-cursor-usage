@@ -82,11 +82,11 @@ in.
 | `workflows` | actionlint over the workflow files themselves |
 | `secrets` | gitleaks over full history, plus a guard against tracked env files |
 
-The renders are uploaded as artifacts to look at on a PR. They are **not**
-compared byte-for-byte against the committed screenshots — the `trmnl/trmnlp`
-tag is unpinned and the page fetches its font over the network, so identical
-markup can produce different bytes. Pin the image by digest and self-host the
-font if you ever want a real drift gate.
+The renders are uploaded as artifacts to look at on a PR. They are not compared
+byte-for-byte against the committed screenshots. The `trmnl/trmnlp` tag is
+unpinned and the page fetches its font over the network, so identical markup can
+produce different bytes. Pin the image by digest and self-host the font if you
+want a real drift gate.
 
 `secrets` needs no configuration on a personal account. If this repo ever moves
 to a GitHub organization, `gitleaks-action` requires a free license key in the
