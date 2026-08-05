@@ -1,0 +1,13 @@
+<div class="layout layout--col gap--medium">
+  {% render 'member_header', trmnl: trmnl, usage: usage, spend_dollars: spend_dollars, budget_dollars: budget_dollars, percent_spent: percent_spent %}
+
+  {% render 'personal_meter', trmnl: trmnl, usage: usage, spend_dollars: spend_dollars, budget_dollars: budget_dollars, percent_spent: percent_spent, title: 'Personal AI Spend' %}
+
+  {% render 'model_bars', trmnl: trmnl, usage: usage, model_max_cents: model_max_cents, limit: 6, show_share: true %}
+</div>
+
+<div class="title_bar">
+  <img class="image image-stroke--medium" src="data:image/svg+xml;base64,{{ logo_svg | base64_encode }}" />
+  <span class="title">{{ usage.name }} &middot; Cursor model usage</span>
+  <span class="instance">{{ usage.totalFastRequests | number_with_delimiter }} fast req</span>
+</div>

@@ -1,0 +1,29 @@
+# Local TRMNL plugin dev container.
+# See https://github.com/usetrmnl/trmnlp#installing-via-docker
+#
+# PLUGIN selects which plugins/<name> directory is mounted at /plugin.
+# The Makefile sets it (along with UID/GID) for you — prefer `make dev`.
+services:
+  trmnlp:
+    image: trmnl/trmnlp
+    pull_policy: always
+    command: ["serve", "--bind", "0.0.0.0"]
+    ports:
+      - "4567:4567"
+    volumes:
+      - ./plugins/${PLUGIN:-cursor-member-usage}:/plugin
+    # The image runs as root. Without this, anything trmnlp writes into the
+    # bind mount (_build/) lands root-owned in your working tree.
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+    environment:
+      # trmnlp resolves its cache via XDG, which defaults to $HOME/.cache/trmnl
+      # — that's /root/.cache and unwritable once we drop privileges above.
+      # The poller writes data.json there on every fetch.
+      HOME: /tmp
+      XDG_CACHE_HOME: /tmp/.cache
+    env_file:
+      # trmnlp has no dotenv dependency: `{{ env.X }}` in .trmnlp.yml reads the
+      # real process environment, so .env has to be injected here.
+      # required:false keeps `make test` / `make lint` working before you make one.
+      - path: .env
+        required: false

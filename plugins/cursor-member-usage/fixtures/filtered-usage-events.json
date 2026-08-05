@@ -1,0 +1,207 @@
+{
+  "__note": "Sample response from POST /teams/filtered-usage-events for one member, in the documented Cursor Admin API shape. Used by tests/transform.test.js; paste into the plugin's Static Data field to preview without a live key.",
+  "totalUsageEventsCount": 12,
+  "pagination": {
+    "numPages": 1,
+    "currentPage": 1,
+    "pageSize": 1000,
+    "hasNextPage": false,
+    "hasPreviousPage": false
+  },
+  "usageEvents": [
+    {
+      "timestamp": "1754352000000",
+      "userEmail": "nick.spaghetti@example.com",
+      "model": "claude-sonnet-4.5",
+      "kind": "Included in Business",
+      "maxMode": false,
+      "requestsCosts": 1,
+      "isTokenBasedCall": false,
+      "isChargeable": true,
+      "isHeadless": false,
+      "chargedCents": 47
+    },
+    {
+      "timestamp": "1754355600000",
+      "userEmail": "nick.spaghetti@example.com",
+      "model": "claude-sonnet-4.5",
+      "kind": "Included in Business",
+      "maxMode": true,
+      "requestsCosts": 2,
+      "isTokenBasedCall": false,
+      "isChargeable": true,
+      "isHeadless": false,
+      "chargedCents": 52
+    },
+    {
+      "timestamp": "1754359200000",
+      "userEmail": "nick.spaghetti@example.com",
+      "model": "claude-sonnet-4.5",
+      "kind": "Included in Business",
+      "maxMode": false,
+      "requestsCosts": 1,
+      "isTokenBasedCall": false,
+      "isChargeable": true,
+      "isHeadless": false,
+      "chargedCents": 41
+    },
+    {
+      "timestamp": "1754362800000",
+      "userEmail": "nick.spaghetti@example.com",
+      "model": "gpt-5",
+      "kind": "Usage-based",
+      "maxMode": false,
+      "requestsCosts": 0,
+      "isTokenBasedCall": true,
+      "isChargeable": true,
+      "isHeadless": false,
+      "tokenUsage": {
+        "inputTokens": 128400,
+        "outputTokens": 9100,
+        "cacheWriteTokens": 4200,
+        "cacheReadTokens": 61000,
+        "totalCents": 92
+      },
+      "chargedCents": 88
+    },
+    {
+      "timestamp": "1754366400000",
+      "userEmail": "nick.spaghetti@example.com",
+      "model": "gpt-5",
+      "kind": "Usage-based",
+      "maxMode": false,
+      "requestsCosts": 0,
+      "isTokenBasedCall": true,
+      "isChargeable": true,
+      "isHeadless": false,
+      "tokenUsage": {
+        "inputTokens": 96500,
+        "outputTokens": 7400,
+        "cacheWriteTokens": 3100,
+        "cacheReadTokens": 44800,
+        "totalCents": 71
+      },
+      "chargedCents": 71
+    },
+    {
+      "timestamp": "1754370000000",
+      "userEmail": "nick.spaghetti@example.com",
+      "model": "gpt-5",
+      "kind": "Usage-based",
+      "maxMode": false,
+      "requestsCosts": 0,
+      "isTokenBasedCall": true,
+      "isChargeable": true,
+      "isHeadless": false,
+      "tokenUsage": {
+        "inputTokens": 110200,
+        "outputTokens": 8300,
+        "cacheWriteTokens": 3600,
+        "cacheReadTokens": 52100,
+        "totalCents": 84,
+        "discountPercentOff": 10
+      },
+      "chargedCents": 76
+    },
+    {
+      "timestamp": "1754373600000",
+      "userEmail": "nick.spaghetti@example.com",
+      "model": "claude-opus-4",
+      "kind": "Usage-based",
+      "maxMode": true,
+      "requestsCosts": 0,
+      "isTokenBasedCall": true,
+      "isChargeable": true,
+      "isHeadless": false,
+      "tokenUsage": {
+        "inputTokens": 74300,
+        "outputTokens": 12600,
+        "cacheWriteTokens": 2800,
+        "cacheReadTokens": 31900,
+        "totalCents": 196
+      },
+      "chargedCents": 196
+    },
+    {
+      "timestamp": "1754377200000",
+      "userEmail": "nick.spaghetti@example.com",
+      "model": "claude-opus-4",
+      "kind": "Usage-based",
+      "maxMode": true,
+      "requestsCosts": 0,
+      "isTokenBasedCall": true,
+      "isChargeable": true,
+      "isHeadless": false,
+      "tokenUsage": {
+        "inputTokens": 68100,
+        "outputTokens": 11200,
+        "cacheWriteTokens": 2500,
+        "cacheReadTokens": 29400,
+        "totalCents": 182
+      },
+      "chargedCents": 182
+    },
+    {
+      "timestamp": "1754380800000",
+      "userEmail": "nick.spaghetti@example.com",
+      "model": "gemini-2.5-pro",
+      "kind": "Usage-based",
+      "maxMode": false,
+      "requestsCosts": 0,
+      "isTokenBasedCall": true,
+      "isChargeable": true,
+      "isHeadless": false,
+      "tokenUsage": {
+        "inputTokens": 51000,
+        "outputTokens": 4300,
+        "cacheWriteTokens": 1200,
+        "cacheReadTokens": 18700,
+        "totalCents": 38
+      },
+      "chargedCents": 38
+    },
+    {
+      "timestamp": "1754384400000",
+      "userEmail": "nick.spaghetti@example.com",
+      "model": "gemini-2.5-pro",
+      "kind": "Usage-based",
+      "maxMode": false,
+      "requestsCosts": 0,
+      "isTokenBasedCall": true,
+      "isChargeable": true,
+      "isHeadless": false,
+      "tokenUsage": {
+        "inputTokens": 48200,
+        "outputTokens": 3900,
+        "cacheWriteTokens": 1100,
+        "cacheReadTokens": 17300,
+        "totalCents": 36
+      },
+      "chargedCents": 36
+    },
+    {
+      "timestamp": "1754388000000",
+      "userEmail": "nick.spaghetti@example.com",
+      "model": "claude-haiku-4.5",
+      "kind": "Included in Business",
+      "maxMode": false,
+      "requestsCosts": 1,
+      "isTokenBasedCall": false,
+      "isChargeable": true,
+      "isHeadless": true,
+      "chargedCents": 26
+    },
+    {
+      "timestamp": "1754391600000",
+      "userEmail": "nick.spaghetti@example.com",
+      "model": "claude-haiku-4.5",
+      "kind": "Included in Business",
+      "maxMode": false,
+      "requestsCosts": 1,
+      "isTokenBasedCall": false,
+      "isChargeable": true,
+      "isHeadless": false,
+      "chargedCents": 24
+    }
+  ]
+}

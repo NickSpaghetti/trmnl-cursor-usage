@@ -1,0 +1,20 @@
+# TRMNLP configuration — local dev only, not uploaded to TRMNL.
+---
+watch:
+  - .trmnlp.yml
+  - src
+
+# Values for the custom fields declared in src/settings.yml. `env` reads the
+# real process environment; docker-compose.yml injects the repo-root .env.
+custom_fields: {
+  cursor_api_key: "{{ env.CURSOR_API_KEY }}",
+  cursor_member_email: "{{ env.CURSOR_MEMBER_EMAIL }}",
+  cursor_member_budget_dollars: 25
+}
+
+variables:
+  trmnl: {
+    plugin_settings: {
+      instance_name: 'Cursor Member Usage'
+    }
+  }

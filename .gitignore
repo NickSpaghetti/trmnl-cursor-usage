@@ -427,3 +427,14 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# TRMNL plugin build output (trmnlp build)
+_build/
+
+# Throwaway staging dir for `make screenshots`. The target removes it, but a
+# failed run leaves it behind.
+plugins/.screenshots-stage/
+
+# NOTE: plugins/*/docs/*.png are deliberately NOT ignored. They are the README
+# screenshots and have to be committed for the images to resolve on GitHub.
+# Regenerate them with `make screenshots`.

@@ -1,0 +1,43 @@
+{
+  "__note": "Demo data for the README screenshots. Not used by the tests — those run against filtered-usage-events.json. Regenerate the images with `make screenshots`.",
+  "name": "NickSpaghetti",
+  "totalUsageEventsCount": 25,
+  "pagination": {
+    "numPages": 1,
+    "currentPage": 1,
+    "pageSize": 1000,
+    "hasNextPage": false,
+    "hasPreviousPage": false
+  },
+  "usageEvents": [
+    { "userEmail": "nickspaghetti@example.com", "model": "claude-opus-4", "kind": "Usage-based", "maxMode": true, "requestsCosts": 0, "isTokenBasedCall": true, "isChargeable": true, "chargedCents": 196, "tokenUsage": { "inputTokens": 74300, "outputTokens": 12600, "totalCents": 196 } },
+    { "userEmail": "nickspaghetti@example.com", "model": "claude-opus-4", "kind": "Usage-based", "maxMode": true, "requestsCosts": 0, "isTokenBasedCall": true, "isChargeable": true, "chargedCents": 182, "tokenUsage": { "inputTokens": 68100, "outputTokens": 11200, "totalCents": 182 } },
+    { "userEmail": "nickspaghetti@example.com", "model": "claude-opus-4", "kind": "Usage-based", "maxMode": true, "requestsCosts": 0, "isTokenBasedCall": true, "isChargeable": true, "chargedCents": 214, "tokenUsage": { "inputTokens": 81900, "outputTokens": 14100, "totalCents": 214 } },
+    { "userEmail": "nickspaghetti@example.com", "model": "claude-opus-4", "kind": "Usage-based", "maxMode": false, "requestsCosts": 0, "isTokenBasedCall": true, "isChargeable": true, "chargedCents": 168, "tokenUsage": { "inputTokens": 63400, "outputTokens": 10300, "totalCents": 168 } },
+
+    { "userEmail": "nickspaghetti@example.com", "model": "gpt-5", "kind": "Usage-based", "maxMode": false, "requestsCosts": 0, "isTokenBasedCall": true, "isChargeable": true, "chargedCents": 88, "tokenUsage": { "inputTokens": 128400, "outputTokens": 9100, "totalCents": 92 } },
+    { "userEmail": "nickspaghetti@example.com", "model": "gpt-5", "kind": "Usage-based", "maxMode": false, "requestsCosts": 0, "isTokenBasedCall": true, "isChargeable": true, "chargedCents": 71, "tokenUsage": { "inputTokens": 96500, "outputTokens": 7400, "totalCents": 71 } },
+    { "userEmail": "nickspaghetti@example.com", "model": "gpt-5", "kind": "Usage-based", "maxMode": false, "requestsCosts": 0, "isTokenBasedCall": true, "isChargeable": true, "chargedCents": 76, "tokenUsage": { "inputTokens": 110200, "outputTokens": 8300, "totalCents": 84, "discountPercentOff": 10 } },
+    { "userEmail": "nickspaghetti@example.com", "model": "gpt-5", "kind": "Usage-based", "maxMode": true, "requestsCosts": 0, "isTokenBasedCall": true, "isChargeable": true, "chargedCents": 92, "tokenUsage": { "inputTokens": 134700, "outputTokens": 9800, "totalCents": 92 } },
+    { "userEmail": "nickspaghetti@example.com", "model": "gpt-5", "kind": "Usage-based", "maxMode": false, "requestsCosts": 0, "isTokenBasedCall": true, "isChargeable": true, "chargedCents": 84, "tokenUsage": { "inputTokens": 121300, "outputTokens": 8700, "totalCents": 84 } },
+
+    { "userEmail": "nickspaghetti@example.com", "model": "claude-sonnet-4.5", "kind": "Included in Business", "maxMode": false, "requestsCosts": 1, "isTokenBasedCall": false, "isChargeable": true, "chargedCents": 47 },
+    { "userEmail": "nickspaghetti@example.com", "model": "claude-sonnet-4.5", "kind": "Included in Business", "maxMode": true, "requestsCosts": 2, "isTokenBasedCall": false, "isChargeable": true, "chargedCents": 52 },
+    { "userEmail": "nickspaghetti@example.com", "model": "claude-sonnet-4.5", "kind": "Included in Business", "maxMode": false, "requestsCosts": 1, "isTokenBasedCall": false, "isChargeable": true, "chargedCents": 41 },
+    { "userEmail": "nickspaghetti@example.com", "model": "claude-sonnet-4.5", "kind": "Included in Business", "maxMode": false, "requestsCosts": 1, "isTokenBasedCall": false, "isChargeable": true, "chargedCents": 38 },
+    { "userEmail": "nickspaghetti@example.com", "model": "claude-sonnet-4.5", "kind": "Included in Business", "maxMode": false, "requestsCosts": 1, "isTokenBasedCall": false, "isChargeable": true, "chargedCents": 44 },
+    { "userEmail": "nickspaghetti@example.com", "model": "claude-sonnet-4.5", "kind": "Included in Business", "maxMode": true, "requestsCosts": 2, "isTokenBasedCall": false, "isChargeable": true, "chargedCents": 50 },
+    { "userEmail": "nickspaghetti@example.com", "model": "claude-sonnet-4.5", "kind": "Included in Business", "maxMode": false, "requestsCosts": 1, "isTokenBasedCall": false, "isChargeable": true, "chargedCents": 36 },
+    { "userEmail": "nickspaghetti@example.com", "model": "claude-sonnet-4.5", "kind": "Included in Business", "maxMode": false, "requestsCosts": 1, "isTokenBasedCall": false, "isChargeable": true, "chargedCents": 49 },
+    { "userEmail": "nickspaghetti@example.com", "model": "claude-sonnet-4.5", "kind": "Included in Business", "maxMode": false, "requestsCosts": 1, "isTokenBasedCall": false, "isChargeable": true, "chargedCents": 43 },
+
+    { "userEmail": "nickspaghetti@example.com", "model": "gemini-2.5-pro", "kind": "Usage-based", "maxMode": false, "requestsCosts": 0, "isTokenBasedCall": true, "isChargeable": true, "chargedCents": 38, "tokenUsage": { "inputTokens": 51000, "outputTokens": 4300, "totalCents": 38 } },
+    { "userEmail": "nickspaghetti@example.com", "model": "gemini-2.5-pro", "kind": "Usage-based", "maxMode": false, "requestsCosts": 0, "isTokenBasedCall": true, "isChargeable": true, "chargedCents": 36, "tokenUsage": { "inputTokens": 48200, "outputTokens": 3900, "totalCents": 36 } },
+    { "userEmail": "nickspaghetti@example.com", "model": "gemini-2.5-pro", "kind": "Usage-based", "maxMode": false, "requestsCosts": 0, "isTokenBasedCall": true, "isChargeable": true, "chargedCents": 41, "tokenUsage": { "inputTokens": 55600, "outputTokens": 4700, "totalCents": 41 } },
+
+    { "userEmail": "nickspaghetti@example.com", "model": "claude-haiku-4.5", "kind": "Included in Business", "maxMode": false, "requestsCosts": 1, "isTokenBasedCall": false, "isChargeable": true, "chargedCents": 26 },
+    { "userEmail": "nickspaghetti@example.com", "model": "claude-haiku-4.5", "kind": "Included in Business", "maxMode": false, "requestsCosts": 1, "isTokenBasedCall": false, "isChargeable": true, "chargedCents": 24 },
+    { "userEmail": "nickspaghetti@example.com", "model": "claude-haiku-4.5", "kind": "Included in Business", "maxMode": false, "requestsCosts": 1, "isTokenBasedCall": false, "isChargeable": true, "chargedCents": 22 },
+    { "userEmail": "nickspaghetti@example.com", "model": "claude-haiku-4.5", "kind": "Included in Business", "maxMode": false, "requestsCosts": 1, "isTokenBasedCall": false, "isChargeable": true, "chargedCents": 28 }
+  ]
+}
